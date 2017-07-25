@@ -164,10 +164,17 @@
   //   }); // should be 5, regardless of the iterator function passed in
   //          No accumulator is given so the first element is used.
   _.reduce = function(collection, iterator, accumulator) {
-    if (accumulator === undefined)
-      var start = 1, accumulator = collection[0];
-    for (var i = start||0; i < collection.length; i++)
-      accumulator = iterator(accumulator, collection[i]);
+    var keys = !Array.isArray(collection) && Object.keys(collection),
+        length = (keys || collection).length,
+        index = 0;
+    if (accumulator === undefined) {
+      accumulator = collection[keys ? keys[index] : index];
+      index++;
+    }
+    for (; index < length; index++) {
+      var currentKey = keys ? keys[index] : index;
+      accumulator = iterator(accumulator, collection[currentKey]);
+    }
     return accumulator;
   };
 
@@ -187,6 +194,7 @@
   // Determine whether all of the elements match a truth test.
   _.every = function(collection, iterator) {
     // TIP: Try re-using reduce() here.
+
   };
 
   // Determine whether any of the elements pass a truth test. If no iterator is
