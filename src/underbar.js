@@ -250,6 +250,14 @@
   // Like extend, but doesn't ever overwrite a key that already
   // exists in obj
   _.defaults = function(obj) {
+    return _.reduce(arguments, function(accumulator, object) {
+      _.each(object, function(value, key) {
+        if (obj[key] === undefined)
+          accumulator[key] = value;
+        return accumulator;
+      });
+      return accumulator;
+    });
   };
 
 
@@ -293,6 +301,13 @@
   // already computed the result for the given argument and return that value
   // instead if possible.
   _.memoize = function(func) {
+    var hashTable = {};
+    return function() {
+      if (hashTable[JSON.stringify(arguments)] === undefined) {
+        hashTable[JSON.stringify(arguments)] = func.apply(this, arguments);
+      }
+      return hashTable[JSON.stringify(arguments)];
+    };
   };
 
   // Delays a function for the given number of milliseconds, and then calls
