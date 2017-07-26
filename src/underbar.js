@@ -418,8 +418,10 @@
     for (var element of shortestArray) {
       var intersect = true;
       for (var i = 1; i < args.length; i++) {
-        if (_.indexOf(args[i], element) < 0)
+        if (_.indexOf(args[i], element) < 0) {
           intersect = false;
+          break;
+        }
       }
       if (intersect === true)
         intersection.push(element);
@@ -430,6 +432,21 @@
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
   _.difference = function(array) {
+    var args = Array.from(arguments),
+        array = args.shift(),
+        output = [];
+    for (var element of array) {
+      var uniq = true;
+      for (var i = 0; i < args.length; i++) {
+        if (_.indexOf(args[i], element) > -1) {
+          uniq = false;
+          break;
+        }
+      }
+      if (uniq === true)
+        output.push(element);
+    }
+    return output;
   };
 
   // Returns a function, that, when invoked, will only be triggered at most once
@@ -438,5 +455,6 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+
   };
 }());
