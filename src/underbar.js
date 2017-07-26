@@ -412,6 +412,19 @@
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
   _.intersection = function() {
+    var args = Array.from(arguments),
+        shortestArray = _.sortBy(args, 'length')[0],
+        intersection = [];
+    for (var element of shortestArray) {
+      var intersect = true;
+      for (var i = 1; i < args.length; i++) {
+        if (_.indexOf(args[i], element) < 0)
+          intersect = false;
+      }
+      if (intersect === true)
+        intersection.push(element);
+    }
+    return intersection;
   };
 
   // Take the difference between one array and a number of other arrays.
