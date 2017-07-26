@@ -365,6 +365,14 @@
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
   _.sortBy = function(collection, iterator) {
+    var isProperty = typeof iterator === "string";
+    return collection.sort(function(a, b) {
+      var aValue = isProperty ? a[iterator] : iterator(a);
+      var bValue = isProperty ? b[iterator] : iterator(b);
+      if (aValue < bValue) return -1;
+      if (aValue > bValue) return 1;
+      return 0;
+    });
   };
 
   // Zip together two or more arrays with elements of the same index
@@ -380,6 +388,14 @@
   //
   // Hint: Use Array.isArray to check if something is an array
   _.flatten = function(nestedArray, result) {
+    if (Array.isArray(nestedArray) === true) {
+      result = [];
+      for (var value of nestedArray)
+        result = result.concat(_.flatten(value));
+      return result;
+    } else {
+      return nestedArray;
+    }
   };
 
   // Takes an arbitrary number of arrays and produces an array that contains
