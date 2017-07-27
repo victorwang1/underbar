@@ -455,6 +455,34 @@
   //
   // Note: This is difficult! It may take a while to implement.
   _.throttle = function(func, wait) {
+    var result;
+    var timeout = null;
+    var previous = 0;
+    var getNow = function() {
+      return new Date().getTime();
+    }
+    var later = function() {
+      previous = getNow();
+      clearTimeout(timeout);
+      timeout = null;
+      result = func.apply(this, arguments);
+    }
 
+    return function() {
+      var now = getNow();
+      if (!previous) previous = now;
+      var remaining = wait - (now - previous);
+      if (remaining <= 0) {
+        if (timeout) {
+          clearTimeout(timeout);
+          timeout = null;
+        }
+        previous = now;
+        result = func.apply(this, arguments);
+      } else if (!timeout) {
+        timeout = setTimeout(later, remaining);
+      }
+      return result;
+    }
   };
 }());
