@@ -292,10 +292,11 @@
   _.memoize = function(func) {
     var hashTable = {};
     return function() {
-      if (hashTable[JSON.stringify(arguments)] === undefined) {
-        hashTable[JSON.stringify(arguments)] = func.apply(this, arguments);
+      var args = JSON.stringify(arguments);
+      if (hashTable[args] === undefined) {
+        hashTable[args] = func.apply(this, arguments);
       }
-      return hashTable[JSON.stringify(arguments)];
+      return hashTable[args];
     };
   };
 
