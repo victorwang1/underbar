@@ -38,9 +38,8 @@
   // Like first, but for the last elements. If n is undefined, return just the
   // last element.
   _.last = function(array, n) {
-    if (n > array.length) return array;
     return n === undefined ? array[array.length - 1] :
-                             array.slice(array.length - n, array.length);
+                             array.slice(Math.max(0, array.length - n));
   };
 
   // Call iterator(value, key, collection) for each element of collection.
@@ -81,7 +80,7 @@
   _.filter = function(collection, test) {
     var output = [];
     _.each(collection, function(value) {
-      if (test(value) === true)
+      if (test(value))
         output.push(value);
     })
     return output;
@@ -98,11 +97,13 @@
 
   // Produce a duplicate-free version of the array.
   _.uniq = function(array) {
-    var output = [];
-    _.each(array, function(value, index, array) {
-      if (_.indexOf(array, value) === index)
-        output.push(value);
-    })
+    var uniq = {}, output = [];
+
+    for (var element of array)
+      uniq[element] = element;
+    for (var key in uniq)
+      output.push(uniq[key]);
+
     return output;
   };
 
